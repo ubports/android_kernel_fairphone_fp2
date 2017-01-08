@@ -84,3 +84,6 @@ GTAGS
 *.orig
 *~
 \#*#
+
+# Snappy build directory
+/parts/
