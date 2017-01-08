@@ -11,7 +11,7 @@ parts:
     source: .
     source-branch: snappy-experimental
     source-type: git
-    kdefconfig: [fairphone_defconfig, snappy/generic.config, snappy/security.config, snappy/systemd.config, snappy/snappy.config, snappy/containers.config]
+#    kdefconfig: [fairphone_defconfig, snappy/generic.config, snappy/security.config, snappy/systemd.config, snappy/snappy.config, snappy/containers.config]
     kconfigs:
       - CONFIG_LOCALVERSION="-snappy_v3.4"
     kernel-initrd-modules:
