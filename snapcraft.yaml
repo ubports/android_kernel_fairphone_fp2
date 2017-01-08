@@ -16,7 +16,7 @@ parts:
       - CONFIG_LOCALVERSION="-snappy_v3.4"
     kernel-initrd-modules:
       - squashfs
-    kernel-initrd-firmware:
+#    kernel-initrd-firmware:
 #      - lib/firmware/e100/d101m_ucode.bin
 #      - lib/firmware/e100/d101s_ucode.bin
 #      - lib/firmware/e100/d102e_ucode.bin
