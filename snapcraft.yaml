@@ -3,6 +3,7 @@ version: 3.4
 summary: A Snappy kernel for the Fairphone 2.
 description: A FP2 kernel plus the minimal Snappy changes.
 type: kernel
+architectures: [ armhf ]
 
 parts:
   kernel:
@@ -10,13 +11,13 @@ parts:
     source: .
     source-branch: snappy-experimental
     source-type: git
-#    kdefconfig: [fairphone_defconfig, snappy/generic.config, snappy/security.config, snappy/systemd.config, snappy/snappy.config, snappy/containers.config]
+    kdefconfig: [fairphone_defconfig, snappy/generic.config, snappy/security.config, snappy/systemd.config, snappy/snappy.config, snappy/containers.config]
     kconfigs:
-      - CONFIG_LOCALVERSION="-snappy_v3.10"
+      - CONFIG_LOCALVERSION="-snappy_v3.4"
     kernel-initrd-modules:
       - squashfs
     kernel-initrd-firmware:
-      - lib/firmware/e100/d101m_ucode.bin
-      - lib/firmware/e100/d101s_ucode.bin
-      - lib/firmware/e100/d102e_ucode.bin
+#      - lib/firmware/e100/d101m_ucode.bin
+#      - lib/firmware/e100/d101s_ucode.bin
+#      - lib/firmware/e100/d102e_ucode.bin
     kernel-image-target: bzImage
