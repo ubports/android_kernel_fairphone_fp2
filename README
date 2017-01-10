@@ -1,3 +1,9 @@
+Well, hi there! I'm sure you were expecting the regular Android kernel Linux readme stuff... but I've got something to tell you first.
+
+This kernel doesn't work. It may never work. It is for experimenting only. It doesn't even build yet.
+Seriously, it doesn't work yet. Don't get too excited.
+
+
 	Linux kernel release 3.x <http://kernel.org/>
 
 These are the release notes for Linux version 3.  Read them carefully,
