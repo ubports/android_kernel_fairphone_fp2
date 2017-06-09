@@ -60,7 +60,7 @@ void switch_h2w_report(struct h2w_info *h, int state){
 		case SND_JACK_HEADPHONE:
 			h->state = HEADSET_NO_MIC;
 			break;
-		case SND_JACK_HEADSET:
+		case SND_JACK_ANC_HEADPHONE:
 			h->state = HEADSET;
 			break;
 		default:
