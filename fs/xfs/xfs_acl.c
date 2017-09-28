@@ -384,6 +384,7 @@ xfs_xattr_acl_set(struct dentry *dentry, const char *name,
 
 	if (type == ACL_TYPE_ACCESS) {
 		umode_t mode = inode->i_mode;
+
 		error = posix_acl_equiv_mode(acl, &mode);
 
 		if (error <= 0) {

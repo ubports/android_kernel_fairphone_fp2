@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2015, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -26,6 +26,10 @@
 
 #define DT_CMD_HDR 6
 
+#define MIN_REFRESH_RATE 30
+
+static int mdss_panel_id = PANEL_FP2_UNKNOWN;
+
 DEFINE_LED_TRIGGER(bl_led_trigger);
 
 void mdss_dsi_panel_pwm_cfg(struct mdss_dsi_ctrl_pdata *ctrl)
@@ -35,6 +39,11 @@ void mdss_dsi_panel_pwm_cfg(struct mdss_dsi_ctrl_pdata *ctrl)
 		pr_err("%s: Error: lpg_chan=%d pwm request failed",
 				__func__, ctrl->pwm_lpg_chan);
 	}
+}
+
+int mdss_dsi_panel_id(void)
+{
+	return mdss_panel_id;
 }
 
 static void mdss_dsi_panel_bklt_pwm(struct mdss_dsi_ctrl_pdata *ctrl, int level)
@@ -220,7 +229,7 @@ int mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 				panel_data);
 
 	if (!gpio_is_valid(ctrl_pdata->disp_en_gpio)) {
-		pr_debug("%s:%d, reset line not configured\n",
+		pr_debug("%s:%d, enable line not configured\n",
 			   __func__, __LINE__);
 	}
 
@@ -242,7 +251,8 @@ int mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 		if (!pinfo->panel_power_on) {
 			if (gpio_is_valid(ctrl_pdata->disp_en_gpio)){
 				gpio_set_value((ctrl_pdata->disp_en_gpio), 1);
-				usleep(12000);
+				if (mdss_dsi_panel_id() < PANEL_FP2_S6D6FA1_VIDEO)
+					usleep(12000);
 			}
 			for (i = 0; i < pdata->panel_info.rst_seq_len; ++i) {
 				gpio_set_value((ctrl_pdata->rst_gpio),
@@ -301,7 +311,7 @@ static int mdss_dsi_panel_partial_update(struct mdss_panel_data *pdata)
 				panel_data);
 	mipi  = &pdata->panel_info.mipi;
 
-	pr_debug("%s: ctrl=%p ndx=%d\n", __func__, ctrl, ctrl->ndx);
+	pr_debug("%s: ctrl=%pK ndx=%d\n", __func__, ctrl, ctrl->ndx);
 
 	caset[1] = (((pdata->panel_info.roi_x) & 0xFF00) >> 8);
 	caset[2] = (((pdata->panel_info.roi_x) & 0xFF));
@@ -425,7 +435,7 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 				panel_data);
 	mipi  = &pdata->panel_info.mipi;
 
-	pr_debug("%s: ctrl=%p ndx=%d\n", __func__, ctrl, ctrl->ndx);
+	pr_debug("%s: ctrl=%pK ndx=%d\n", __func__, ctrl, ctrl->ndx);
 
 	if (ctrl->on_cmds.cmd_cnt)
 		mdss_dsi_panel_cmds_send(ctrl, &ctrl->on_cmds);
@@ -447,7 +457,7 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 	ctrl = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
-	pr_debug("%s: ctrl=%p ndx=%d\n", __func__, ctrl, ctrl->ndx);
+	pr_debug("%s: ctrl=%pK ndx=%d\n", __func__, ctrl, ctrl->ndx);
 
 	mipi  = &pdata->panel_info.mipi;
 
@@ -870,6 +880,13 @@ static int mdss_panel_parse_dt(struct device_node *np,
 	const char *data;
 	static const char *pdest;
 	struct mdss_panel_info *pinfo = &(ctrl_pdata->panel_data.panel_info);
+
+	rc = of_property_read_u32(np, "qcom,mdss-pan-id", &tmp);
+	if (!rc)
+		mdss_panel_id = tmp;
+	else
+		mdss_panel_id = PANEL_FP2_UNSUPPORTED;
+	pr_info("%s: Panel ID = %d\n", __func__, mdss_panel_id);
 
 	rc = of_property_read_u32(np, "qcom,mdss-dsi-panel-width", &tmp);
 	if (rc) {

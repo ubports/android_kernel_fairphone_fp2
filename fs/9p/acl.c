@@ -343,6 +343,7 @@ static int v9fs_xattr_set_acl(struct dentry *dentry, const char *name,
 				 * What is the following setxattr update the
 				 * mode ?
 				 */
+
 				v9fs_vfs_setattr_dotl(dentry, &iattr);
 			}
 		}

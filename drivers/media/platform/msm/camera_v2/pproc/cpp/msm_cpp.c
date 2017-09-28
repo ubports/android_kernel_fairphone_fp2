@@ -1537,7 +1537,7 @@ long msm_cpp_subdev_ioctl(struct v4l2_subdev *sd,
 	}
 
 	if ((ioctl_ptr->ioctl_ptr == NULL) || (ioctl_ptr->len == 0)){
-		pr_err("ioctl_ptr OR ioctl_ptr->len is NULL  %p %d \n",
+		pr_err("ioctl_ptr OR ioctl_ptr->len is NULL  %pK %d \n",
 			ioctl_ptr, ioctl_ptr->len);
 		return -EINVAL;
 	}
@@ -1701,8 +1701,7 @@ long msm_cpp_subdev_ioctl(struct v4l2_subdev *sd,
 		uint32_t identity;
 		struct msm_cpp_buff_queue_info_t *buff_queue_info;
 
-		if ((ioctl_ptr->len == 0) ||
-			(ioctl_ptr->len > sizeof(uint32_t)))
+		if (ioctl_ptr->len != sizeof(uint32_t))
 			return -EINVAL;
 
 		rc = (copy_from_user(&identity,
